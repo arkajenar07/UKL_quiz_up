@@ -1,0 +1,53 @@
+CREATE DATABASE quiz
+
+CREATE TABLE pengguna(
+    id_user INT NOT NULL AUTO_INCREMENT,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    jenis_user VARCHAR(100) NOT NULL,
+    CONSTRAINT pk_user PRIMARY KEY(id_user)
+    )
+
+CREATE TABLE kategori(
+    id_kategori INT NOT NULL,
+    nama_kategori VARCHAR(100) NOT NULL,
+    CONSTRAINT pk_kategori PRIMARY KEY(id_kategori)
+    )
+
+CREATE TABLE quiz-pengguna{
+    id_user INT NOT NULL,
+    id_kuis INT NOT NULL,
+    CONSTRAINT fk_kuis FOREIGN KEY(id_user) REFERENCES pengguna(id_user),
+    CONSTRAINT fk_kuis FOREIGN KEY(id_kuis) REFERENCES kuis(id_kuis)
+}
+
+
+
+CREATE TABLE kuis(
+    id_kuis INT NOT NULL,
+    nama_kuis VARCHAR(100) NOT NULL,
+    jumlah_soal INT(100) NOT NULL,
+    id_pembuat INT NOT NULL,
+    id_kategori INT NOT NULL,
+    CONSTRAINT pk_kuis PRIMARY KEY(id_kuis),
+    CONSTRAINT fk_kuis FOREIGN KEY(id_pembuat) REFERENCES pengguna(id_user),
+    CONSTRAINT fk_kuis FOREIGN KEY(id_kategori) REFERENCES kategori(id_kategori)
+    )
+    
+
+CREATE TABLE soal(
+    id_soal INT NOT NULL,
+    pertanyaan VARCHAR(100) NOT NULL,
+    jawaban_benar VARCHAR(100) NOT NULL,
+    id_kuis INT NOT NULL,
+    CONSTRAINT pk_soal PRIMARY KEY(id_soal),
+    CONSTRAINT fk_soal FOREIGN KEY(id_kuis) REFERENCES kuis(id_kuis)
+    )
+
+    
+CREATE TABLE jawaban(
+    id_soal INT NOT NULL,
+    opsi VARCHAR(100) NOT NULL,
+    CONSTRAINT fk_jawaban FOREIGN KEY(id_soal) REFERENCES soal(id_soal)
+    )
