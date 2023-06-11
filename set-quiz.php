@@ -118,12 +118,12 @@ if(isset($_POST['change'])){
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
         font-family: 'Share Tech Mono', monospace;
+        
     }
 
     .con{
         display: flex;
         flex-direction: row;
-        justify-content: center;
     }
 
     h1, .ques-list-title{
@@ -142,15 +142,22 @@ if(isset($_POST['change'])){
     }
 
     #make_quiz{
+
+        position: fixed;
         width: 700px;
-        height: auto;
-        margin-top: 64px;
+        height: 720px;
+        margin-left: 384px;
+        margin-top: 96px;
         border-radius: 36px;
         border: 3px solid #AD7BE9;
         background-color: #FFFFFF;
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+
+    #ques-form{
+        margin-left: 1084px;
     }
 
     .container-label{
@@ -238,12 +245,75 @@ if(isset($_POST['change'])){
 
     .question{
         font-size: 20px;
+        margin-bottom: 24px;
+        margin-top: 24px;
+    }
 
+    .ques-con{
+        margin-left: 64px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ques{
+        width: 540px;
+        border: 2px solid #AD7BE9;
+        padding: 16px;
+        margin-top: 32px;
+
+    }
+
+    .answer-con{
+        border: 2px solid #AD7BE9;
+        display: grid;
+        grid-template-columns: auto auto;
+        padding:24px;
+        gap:16px;
+    }
+
+    .icon-del{
+        width: 32px;
+    }
+
+    .del-btn{
+        width: max-content;
+        background: none;
+        border: none; 
+    }
+
+    .del-con{
+        margin-top: 32px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .add-ques-btn{
+        margin-top: 32px;
+        margin-bottom: 32px;
+        width: 240px;
+        height: 50px;
+        background-color: #694E8A;
+        border-radius: 28px;
+        outline: 1px solid #FFFFFF;
+        transition: 0.2s;   
+        color: #FFFFFF;
+        font-size: 24px;
+        font-family: 'Share Tech Mono', monospace;
+    }
+
+    .add-ques-btn:hover{
+        background-color: #543E6A;
+    }
+
+    .rad-inp{
+        margin-right: 8px;
+        accent-color: #AD7BE9;
     }
 </style>
 <body>
 <h1 style="margin-bottom: 32px; text-align: center;" >QUIZ SETTINGS</h1>
-<div class="con" >
+<div class="con">
 <form action="" method="post" id="make_quiz">
     <h1>EDIT QUIZ DETAILS</h1>
         <div class="container-label">
@@ -303,12 +373,11 @@ if(isset($_POST['change'])){
         <button type="submit" name="change" id="save">SAVE</button>    
         <button  id="del"><a href="deletefunc.php?delete-question=<?php echo $id; ?>" id="delete" onclick="return confirm('You sure want to delete ?')">DELETE</a></button>
     </form>
-    <form action="" method="post">
+    <form action="" method="post" id="ques-form" >
         <div class="ques-con">
         <h2 class="ques-list-title" >QUESTION LIST</h2>
             <?php if($count_question > 0){
                 while ($row_select_question = mysqli_fetch_array($result_select_question)) {
-                    echo $ques_num;
                     $id_ques = $row_select_question['id_soal'];
                 ?>
             
@@ -316,31 +385,31 @@ if(isset($_POST['change'])){
                 <h2 class="ques-title">QUESTION <?php echo $nomor; ?></h2>
                 <p class="question"><?php echo $row_select_question['pertanyaan']; ?></p>
                 <?php if($row_select_question['jenis_soal'] == "option"){ ?>
-                <input type="radio" name="answer<?php echo $nomor; ?>" id="" <?php if($row_select_question['jawaban_benar'] == 1){echo "checked";} ?> ><?php echo $row_select_question['option1']; ?>
-                <input type="radio" name="answer<?php echo $nomor; ?>" id="" <?php if($row_select_question['jawaban_benar'] == 2){echo "checked";} ?> ><?php echo $row_select_question['option2']; ?>
-                <input type="radio" name="answer<?php echo $nomor; ?>" id="" <?php if($row_select_question['jawaban_benar'] == 3){echo "checked";} ?> ><?php echo $row_select_question['option3']; ?>
-                <input type="radio" name="answer<?php echo $nomor; ?>" id="" <?php if($row_select_question['jawaban_benar'] == 4){echo "checked";} ?> ><?php echo $row_select_question['option4']; ?>
-                <button><a href="delete_ques.php?del=<?php echo $id_ques; ?>">DELETE</a></button>
-            
+                <div class="answer-con">
+                
+                <div class="inp-con"><input type="radio" name="answer<?php echo $nomor; ?>" id="" class="rad-inp" <?php if($row_select_question['jawaban_benar'] == 1){echo "checked";} ?> ><?php echo $row_select_question['option1']; ?></div>
+                <div class="inp-con"><input type="radio" name="answer<?php echo $nomor; ?>" id="" class="rad-inp" <?php if($row_select_question['jawaban_benar'] == 2){echo "checked";} ?> ><?php echo $row_select_question['option2']; ?></div>
+                <div class="inp-con"><input type="radio" name="answer<?php echo $nomor; ?>" id="" class="rad-inp" <?php if($row_select_question['jawaban_benar'] == 3){echo "checked";} ?> ><?php echo $row_select_question['option3']; ?></div>
+                <div class="inp-con"><input type="radio" name="answer<?php echo $nomor; ?>" id="" class="rad-inp" <?php if($row_select_question['jawaban_benar'] == 4){echo "checked";} ?> ><?php echo $row_select_question['option4']; ?></div>
+                </div>
+                <div class="del-con"><button type="button" class="del-btn" ><a href="delete_ques.php?del=<?php echo $id_ques; ?>&set=<?php echo $id; ?>" id="delete" onclick="return confirm('You sure want to delete ?')"><img class="icon-del" src="ASSET_UKL/icon/red-icon/TRASH.png" alt=""></a></button></div>
 
             <?php 
             }
 
             if($row_select_question['jenis_soal'] == "truefalse"){?>
-                <input type="radio" name="answer<?php echo $nomor; ?>" id="" <?php if($row_select_question['jawaban_benar'] == 5){echo "checked";} ?> ><?php echo $row_select_question['option1']; ?>
-                <input type="radio" name="answer<?php echo $nomor; ?>" id="" <?php if($row_select_question['jawaban_benar'] == 6){echo "checked";} ?> ><?php echo $row_select_question['option2']; ?>
-                <button><a href="delete_ques.php?del=<?php echo $id_ques; ?>">DELETE</a></button>
+                <div class="answer-con">
+                <div class="inp-con"><input type="radio" name="answer<?php echo $nomor; ?>" id="" class="rad-inp" <?php if($row_select_question['jawaban_benar'] == 5){echo "checked";} ?> ><?php echo $row_select_question['option1']; ?></div>
+                <div class="inp-con"><input type="radio" name="answer<?php echo $nomor; ?>" id="" class="rad-inp" <?php if($row_select_question['jawaban_benar'] == 6){echo "checked";} ?> ><?php echo $row_select_question['option2']; ?></div>
+                
+                </div>
+                <div class="del-con"><button type="button" class="del-btn" ><a href="delete_ques.php?del=<?php echo $id_ques; ?>&set=<?php echo $id; ?>" id="delete" onclick="return confirm('You sure want to delete ?')"><img class="icon-del" src="ASSET_UKL/icon/red-icon/TRASH.png" alt=""></a></button></div>
         <?php } ?> 
             </div>
         <?php
         $nomor++;
         $sql_update = "UPDATE `soal` SET `nomor`='$ques_num' WHERE id_soal = $id_ques";
         $result_update = mysqli_query($host, $sql_update);
-        if($result_update){
-            echo "TRUE<br>";
-        } else{
-            echo "FALSE<br>";
-        }
         
         $ques_num++;
 
@@ -348,11 +417,11 @@ if(isset($_POST['change'])){
 
         }
         ?>
-        <button><a href="insert-question.php?change=<?php echo $id; ?>">ADD QUESTION</a></button>
+        <a href="insert-question.php?change=<?php echo $id; ?>"><button type="button" class="add-ques-btn">ADD QUESTION</button></a>
         </div>
     <?php } else{?>
-        <h2>NO QUESTION MA FRENDO ADD ONE</h2>
-        <button><a href="insert-question.php?change=<?php echo $id; ?>">ADD QUESTION</a></button>
+        <h2>NO QUESTION FOUND, ADD ONE</h2>
+        <a href="insert-question.php?change=<?php echo $id; ?>"><button type="button" class="add-ques-btn">ADD QUESTION</button></a>
     <?php }?>
     </form>
 </div>

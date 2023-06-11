@@ -1,12 +1,12 @@
 <?php
 session_start();
 
-//error_reporting(0);
+error_reporting(0);
 include('db.php');
 if(isset($_GET['change'])){
     $id_kuis = $_GET['change'];
 }
-echo $id_kuis;
+
 $question_error_massage = "";
 $answer1_error_massage = "";
 $answer2_error_massage = "";
@@ -30,7 +30,7 @@ if(isset($_POST['insert'])){
     if(empty(trim($soal))){
         $question_error_massage = "Please fill this field";
     }
-    if(empty(trim($jawaban_benar))){
+    if(empty($jawaban_benar)){
         $checkbox_error_massage = "PLEASE SET THE CORRECT ANSWER";
     }
     if($question_type === "option"){
@@ -49,7 +49,7 @@ if(isset($_POST['insert'])){
         if(empty(trim($option4))){
             $answer4_error_massage = "Please fill this field";
         }
-        if((!empty(trim($option1))) && (!empty(trim($option2))) && (!empty(trim($option3))) && (!empty(trim($option4))) && (!empty(trim($soal)))){
+        if((!empty(trim($option1))) && (!empty(trim($option2))) && (!empty(trim($option3))) && (!empty(trim($option4))) && (!empty(trim($soal))) && (!empty($jawaban_benar))){
             $sql_insert = "INSERT INTO `soal`(`id_soal`, `pertanyaan`, `jawaban_benar`, `option1`, `option2`, `option3`, `option4`, `jenis_soal`, `id_kuis`) VALUES ('','$soal','$jawaban_benar','$option1','$option2','$option3','$option4','$question_type', $id_kuis)";
             $query_insert = mysqli_query($host, $sql_insert);
             if($query_insert){
@@ -66,7 +66,7 @@ if(isset($_POST['insert'])){
         if(empty(trim($option6))){
             $answer6_error_massage = "Please fill this field";
         }
-        if((!empty(trim($option5))) && (!empty(trim($option6))) && (!empty(trim($soal)))){
+        if((!empty(trim($option5))) && (!empty(trim($option6))) && (!empty(trim($soal))) && (!empty($jawaban_benar))){
             $sql_insert = "INSERT INTO `soal`(`id_soal`, `pertanyaan`, `jawaban_benar`, `option1`, `option2`, `option3`, `option4`, `jenis_soal`, `id_kuis`) VALUES ('','$soal','$jawaban_benar','$option5','$option6','','','$question_type', $id_kuis)";
             $query_insert = mysqli_query($host, $sql_insert);
             if($query_insert){
@@ -186,6 +186,7 @@ if(isset($_POST['insert'])){
         font-size: 84px;
         margin-top: 64px;
         color: #3E54AC;
+        text-align: center;
     }
 
     .minus{
@@ -290,7 +291,7 @@ if(isset($_POST['insert'])){
         color: #FFFFFF;
         font-size: 16px;
         position: absolute;
-        top: 242px;
+        top: 216px;
         display: none;
         animation-name: enter;
         animation-duration: 0.2s;
@@ -308,7 +309,7 @@ if(isset($_POST['insert'])){
         color: #FFFFFF;
         font-size: 16px;
         position: absolute;
-        top: 242px;
+        top: 216px;
         display: none;
         animation-name: enter;
         animation-duration: 0.2s;
@@ -325,7 +326,7 @@ if(isset($_POST['insert'])){
         color: #FFFFFF;
         font-size: 16px;
         position: absolute;
-        top: 110px;
+        top: 64px;
         display: none;
         animation-name: enter;
         animation-duration: 0.2s;
@@ -343,7 +344,7 @@ if(isset($_POST['insert'])){
         color: #FFFFFF;
         font-size: 16px;
         position: absolute;
-        top: 110px;
+        top: 64px;
         display: none;
         animation-name: enter;
         animation-duration: 0.2s;
@@ -355,6 +356,10 @@ if(isset($_POST['insert'])){
         accent-color: #AFE1AF;
         width: 32px;
         height: 32px;
+    }
+
+    .err{
+        color: red;
     }
 
     @keyframes enter{
@@ -373,8 +378,9 @@ if(isset($_POST['insert'])){
     <h1>QUESTION</h1>
 <form action="" method="post">
     <div class="container-label">
+            <p class="err" ><?php echo $checkbox_error_massage; ?></p>
             <label for="pertanyaan" class="question-lable" >QUESTION</label>
-            <p id="err" ><?php echo $question_error_massage; ?></p>
+            <p class="err" ><?php echo $question_error_massage; ?></p>
             <textarea name="question-input" cols="50" rows="10" class="input-question"></textarea>
     </div>
     <div class="grid-answer" id="container">
@@ -383,7 +389,7 @@ if(isset($_POST['insert'])){
                 <span id="mark1">MAKE THIS THE CORRECT ANSWER</span>
                 <input type="checkbox" class="set-true" value="1" onclick="checkedOnClick(this);" onmouseover="showTip1()" onmouseout="hideTip1()" name="set-true">
             </div>
-            <p id="err" ><?php echo $answer1_error_massage; ?></p>
+            <p class="err" ><?php echo $answer1_error_massage; ?></p>
             <textarea name="answer-input1" cols="50" rows="10" class="input-answer" ></textarea>
         </div>
         <div class="answer-container" id="2" >
@@ -391,7 +397,7 @@ if(isset($_POST['insert'])){
                 <span id="mark2">MAKE THIS THE CORRECT ANSWER</span>
                 <input type="checkbox" class="set-true" value="2" onclick="checkedOnClick(this);" onmouseover="showTip2()" onmouseout="hideTip2()" name="set-true">
             </div>
-            <p id="err" ><?php echo $answer2_error_massage; ?></p>
+            <p class="err" ><?php echo $answer2_error_massage; ?></p>
             <textarea name="answer-input2" cols="50" rows="10" class="input-answer" ></textarea>
         </div>
         <div class="answer-container" id="3">
@@ -399,7 +405,7 @@ if(isset($_POST['insert'])){
                 <span id="mark3">MAKE THIS THE CORRECT ANSWER</span>
                 <input type="checkbox" class="set-true" value="3" onclick="checkedOnClick(this);" onmouseover="showTip3()" onmouseout="hideTip3()" name="set-true">
             </div>
-            <p id="err" ><?php echo $answer3_error_massage; ?></p>
+            <p class="err" ><?php echo $answer3_error_massage; ?></p>
             <textarea name="answer-input3" cols="50" rows="10" class="input-answer" ></textarea>
         </div>
         <div class="answer-container" id="4" >
@@ -407,11 +413,11 @@ if(isset($_POST['insert'])){
                 <span id="mark4">MAKE THIS THE CORRECT ANSWER</span>
                 <input type="checkbox" class="set-true" value="4" onclick="checkedOnClick(this);" onmouseover="showTip4()" onmouseout="hideTip4()" name="set-true">
             </div>
-            <p id="err" ><?php echo $answer4_error_massage; ?></p>
+            <p class="err" ><?php echo $answer4_error_massage; ?></p>
             <textarea name="answer-input4" cols="50" rows="10" class="input-answer" ></textarea>
         </div>
         <div class="answer-container" id="5" style="display:none;" >
-            <p id="demo" ></p>
+            
             <div class="checkbox-container">
                 <span id="mark5">MAKE THIS THE CORRECT ANSWER</span>
                 <input type="checkbox" class="set-true" value="5" onclick="checkedOnClick(this);" onmouseover="showTip5()" onmouseout="hideTip5()" name="set-true" >
@@ -420,12 +426,12 @@ if(isset($_POST['insert'])){
             <textarea name="answer-input5" cols="50" rows="10" class="input-answer" ></textarea>
         </div>
         <div class="answer-container" id="6" style="display:none;" >
-            <p id="demo" ></p>
+            
             <div class="checkbox-container">
                 <span id="mark6">MAKE THIS THE CORRECT ANSWER</span>
                 <input type="checkbox" class="set-true" value="6" onclick="checkedOnClick(this);" onmouseover="showTip6()" onmouseout="hideTip6()" name="set-true">
             </div>
-            <p id="err" ><?php echo $answer6_error_massage; ?></p>
+            <p class="err" ><?php echo $answer6_error_massage; ?></p>
             <textarea name="answer-input6" cols="50" rows="10" class="input-answer" ></textarea>
         </div>
         <p id="err" ><?php echo $checkbox_error_massage; ?></p>

@@ -1,7 +1,12 @@
 <?php
 session_start();
 include("db.php");
-$get_user = $_SESSION['username_email'];
+$id_user = $_SESSION["id_user"];
+
+$select_user = "SELECT * FROM `pengguna` WHERE id_user = $id_user";
+$result_user = mysqli_query($host, $select_user);
+$data_user = mysqli_fetch_array($result_user);
+
 $sql = "SELECT * FROM `kuis`";
 
 $result = mysqli_query($host, $sql);
@@ -16,6 +21,23 @@ if(isset($_POST['submit'])){
     }
     
 }
+
+if(isset($_POST['feed'])){
+    $pesan = $_POST['pesan'];
+    $rate = $_POST['rate'];
+
+    $feed = "INSERT INTO `feedback`(`id_feedback`, `pesan_feedback`, `rating`, `tanggal_kirim`, `id_pengirim`) VALUES ('','$pesan','$rate', now(), '$id_user')";
+    $query_feed = mysqli_query($host, $feed);
+
+    if($query_feed){
+        header('Location: page.php');
+    }
+
+
+}
+
+$show_feed = "SELECT * FROM `feedback`";
+$query_show_feed = mysqli_query($host, $show_feed);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -231,10 +253,18 @@ if(isset($_POST['submit'])){
             font-weight: 400;
         }
 
-        #feedback h1{
+        #feedback h1, #about-us h1{
             font-size: 84px;
             color: #3E54AC;
             text-align: center;
+        }
+
+        .subtitle{
+            font-size: 42px;
+            color: #694E8A;
+            text-align: center;
+            margin-top: 37px;
+            margin-bottom: 32px;
         }
 
         .container{
@@ -266,6 +296,12 @@ if(isset($_POST['submit'])){
 
         .cover{
             height: 254px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .cover img{
+            height: 254px;
         }
 
         .play-menu{
@@ -275,7 +311,7 @@ if(isset($_POST['submit'])){
             align-items: center;
         }
 
-        .score-avg{
+        .score-categ{
             width: 100%;
             display: flex;
             justify-content: space-between;
@@ -286,25 +322,30 @@ if(isset($_POST['submit'])){
             font-weight: 400;
             color: #AD7BE9;
             margin-left: 32px;
-            margin-top: 16px;
+            margin-top: 8px;
         }
 
-        .avg{
+        .categ{
             font-size: 24px;
             font-weight: 400;
             color: #AD7BE9;
             text-decoration: none;
             margin-right: 32px;
-            margin-top: 16px;
+            margin-top: 8px;
         }
 
         
-        .avg:hover{
+        .categ:hover{
             cursor: pointer;
             color: #3E54AC;
         }
 
+        .play-link{
+            text-decoration: none;
+        }
+
         .play-button{
+            margin-top: 8px;
             width: 530px;
             height: 50px;
             border-radius: 28px;
@@ -312,10 +353,19 @@ if(isset($_POST['submit'])){
             color: #FFFFFF;
             font-size: 24px;
             font-family: 'Share Tech Mono', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
         }
 
         .play-button:hover{
             cursor: pointer;
+        }
+
+        .go{
+            margin-left: 8px;
+            width: 24px;
         }
         
         .search-bar{
@@ -345,6 +395,10 @@ if(isset($_POST['submit'])){
             
         }
 
+        .acc-details{
+            text-decoration: none;
+        }
+
         .settings{
             width: 180px;
             height: 50px;
@@ -355,6 +409,10 @@ if(isset($_POST['submit'])){
             border: 1px solid #694E8A;
             border-radius: 28px;
             outline: 1px solid #694E8A;
+            color: #694E8A;
+            font-size: 24px;
+            font-family: 'Share Tech Mono', monospace;
+            margin-right: 12px;
             transition: 0.2s;
         }
 
@@ -364,13 +422,167 @@ if(isset($_POST['submit'])){
             outline: 1px solid #FFFFFF;
         }
 
-        .settings a{
+        .form-con{
+            display: flex;
+            justify-content: center;
+        }
+        .feed-form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: max-content;
+        }
+
+        .feed{
+            resize: none;
+            width: 1292px;
+            height: 69px;
+            border: 3px solid #694E8A;
+            border-radius: 28px;
+            outline: 3px solid #694E8A;
+            outline-offset: 6px;
+            text-align: center;
+            font-size: 36px;
+            color: #AD7BE9;
+            padding-top: 24px;
+            font-family: 'Share Tech Mono', monospace;
+
+            margin: 32px 0 48px 0;
+        }
+
+        .feed::-webkit-scrollbar{
+            display: none;
+        }
+
+        .len{
+            align-self: flex-end;
+            font-size: 16px;
             color: #694E8A;
+        }
+        
+        #rate{
+            accent-color: #AD7BE9;
+            width: 320px;
+        }
+
+        .about-con{
+            display: flex;
+            align-items: center;
+            margin-left: 64px;
+        }
+
+        .about-con .about-title{
+            font-size: 48px;
+            color: #694E8A;
+            
+        }
+
+        .about-con  p{
+            margin-top: 48px;
+            font-size: 24px;
+            color: #694E8A;
+            width: 960px;
+            text-align: justify;
+        }
+
+        .about-con img{
+            width: 640px;
+        }
+
+        .noquiz{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .noquiz h1{
+            font-size: 48px;
+            color: #694E8A;
+            margin-bottom: 32px;
+        }
+
+        .submit{
+            margin-top: 48px;
+            width: 240px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #694E8A;
+            c
+            border-radius: 28px;
+            outline: 1px solid #FFFFFF;
+            transition: 0.2s;   
+            color: #FFFFFF;
             font-size: 24px;
             font-family: 'Share Tech Mono', monospace;
-            margin-right: 12px;
+        }
+
+        .profile-pic-feed{
+            width: 120px;
+            height: 120px;
+            border: 2px solid #AD7BE9;
+            border-radius: 96px;
+            margin-top: 32px;
+            margin-left: 64px;
+        }
+
+        .feedcon{
+            margin-top: 64px;
+            margin-left: 132px;
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 64px;
+        }
+
+        .feedback-con{
+            width: 600px;
+            height: 400px;
+            border: 3px solid #AD7BE9;
+            border-radius: 36px;
+        }
+
+        .feedback-title{
+            background-color: #AD7BE9;
+            border-radius: 32px 32px 0 0;
+            height: 90px;
+            display: flex;
+        }
+        .ttl-container{
+            margin-top: 48px;
+            margin-left: 32px;
+        }
+
+        .username-feedback{
+            font-size: 36px;
+            color: #FFFFFF;
+        }
+
+        .tanggal-feedback{
+            font-size: 24px;
+            color: #AD7BE9;
+            font-weight: 400;
+        }
+
+        .pesan-feedback{
+            word-wrap: break-word;
+            height: 160px;
+            margin-left: 16px;
+            margin-top: 72px;
+            font-size: 16px;
 
         }
+
+        .rate-feedback{
+            height: 78px;
+            border-top: 3px solid #AD7BE9;
+            color: #F1E806;
+            text-align: center;
+            font-size: 48px;
+            padding-top: 8px;
+        }
+
+
 
 </style>
 
@@ -419,18 +631,18 @@ if(isset($_POST['submit'])){
             </form>
             <div class="menu">
            <!-- <button class="notification" >NOTIFICATION</button>-->
-            <button class="settings" ><a href="account-details.php" >ACCOUNT</a> <img src="ASSET_UKL/icon/purple-icon/ACCOUNT-DARK.png" width="32px" ></button>
+            <a href="account-details.php" class="acc-details" ><button class="settings" >ACCOUNT<img src="ASSET_UKL/icon/purple-icon/ACCOUNT-DARK.png" width="32px" ></button></a> 
             <img src="" alt="">
             </div>
             
         </nav>
         <div class="content">
             <section class="sec" id="home">
-            <h1>WELCOME, <?php echo $_SESSION['username_email']; ?></h1>
+            <h1>WELCOME, <?php echo $data_user['username']; ?></h1>
                 <pre>With new quizzes added regularly and exciting rewards up for 
 grabs, there's never been a better time to start playing. 
 Welcome to Quiz Up buddy and let the games begin!</pre>
-                <button>GO TO COURSE</button>
+                 <a href="#course"><button>GO TO COURSE</button></a> 
                     
                     
                 </div>
@@ -452,13 +664,15 @@ Welcome to Quiz Up buddy and let the games begin!</pre>
                         $row_category = mysqli_fetch_array($result_category);?>
                         <div class="card-course">
                         <h1 class="card-title"><?php echo $row['nama_kuis'];?></h1>
-                        <div class="cover"></div>
+                        <div class="cover">
+                            <img src="ASSET_UKL/image/questions.jpg" alt="">
+                        </div>
                         <div class="play-menu">
-                            <div class="score-avg">
+                            <div class="score-categ">
                                 <h1 class="question-num"><?php echo $count_ques." QUESTIONS"; ?></h1>
-                                <a href="#" class="avg"><?php echo "CATEGORY: ".$row_category['nama_kategori']; ?></a>
+                                <a href="#" class="categ"><?php echo "CATEGORY: ".$row_category['nama_kategori']; ?></a>
                             </div>
-                            <button class="play-button" ><a href="playmenu.php?play=<?php echo $id_kuis; ?>">GO PLAY!</a></button>
+                            <a href="playmenu.php?play=<?php echo $id_kuis; ?>" class="play-link" ><button class="play-button" >GO PLAY! <img src="ASSET_UKL/icon/white-icon/NEXT.png" class="go" ></button></a>
                         </div>
                     </div>
                     <?php } ?>
@@ -466,12 +680,75 @@ Welcome to Quiz Up buddy and let the games begin!</pre>
                     
                 </div>
                 </div>
-            </section>
-            <section class="sec" id="feedback">
+                <section class="sec" id="feedback">
                 <h1>FEEDBACK AND RATINGS</h1>
-        
+                <p class="subtitle" >HOW WAS YOUR EXPERIENCE ?</p>
+                <div class="form-con" >
+                <form action="" method="post" class="feed-form" >
+                    <p class="len" ><span id="count">0</span> / 300</p>
+                    <textarea name="pesan" class="feed" id="feed" cols="100" rows="2" maxlength="300" placeholder="WRITE YOUR SUGGESTIONS OR COMMENTS HERE !" ></textarea>
+                    <input type="range" name="rate" id="rate" min="1" max="10" step="0.5" value="5">
+                    <p>Rate: <span id="demo">5</span> / 10</p>
+                    <button type="submit" name="feed" class="submit" >SUBMIT</button>
+                </form>
+                </div>
+
+                <div class="feedcon">
+                    <?php while($row_feedback = mysqli_fetch_array($query_show_feed )){ ?>
+                        <?php 
+                            $get_id_pengirim = $row_feedback['id_pengirim'];
+                            $select_pengirim = "SELECT pengguna.username, pengguna.foto_profil, feedback.id_pengirim FROM pengguna INNER JOIN feedback ON pengguna.id_user = $get_id_pengirim;";
+                            $nama_get = mysqli_query($host, $select_pengirim);
+                            $row_nama = mysqli_fetch_array($nama_get);
+                            ?>
+                        <div class="feedback-con">
+                            <div class="feedback-title">
+                                <img src="./ASSET_UKL/image/<?php echo $row_nama['foto_profil']; ?>" alt="" class="profile-pic-feed">
+                                <div class="ttl-container">
+                                    <h3 class="username-feedback" ><?php echo $row_nama['username']; ?></h3>
+                                    <h3 class="tanggal-feedback"  > <?php echo $row_feedback['tanggal_kirim']; ?></h3>
+                                </div>
+                                
+                            </div>
+                            
+                            <p class="pesan-feedback"><?php echo $row_feedback['pesan_feedback']; ?></p>
+                            <h3 class="rate-feedback" ><?php echo $row_feedback['rating']." / 10"; ?></h3>
+                        </div>
+                    
+                    <?php }?>
+                </div>
+                
             </section>
-            <section class="sec" style="background-color: orange;" id="about-us"></section>
+
+            <section class="sec" id="about-us">
+                <h1>ABOUT US</h1>
+                <div class="about-con">
+                    <img src="ASSET_UKL/image/sit.avif" alt="">
+                    <div>
+                        <h2 class="about-title" style="text-align: left;">Welcome to QUIZ UP !</h2>
+                        <p>Welcome to QuizUp, the ultimate destination for trivia lovers! We are passionate about knowledge, learning, and the thrill of competition. Whether you're a trivia novice or a seasoned expert, QuizUp is the place to challenge yourself, expand your horizons, and connect with like-minded individuals from all around the world.</p>
+                    </div>
+                </div>
+
+                <div class="about-con">
+                    
+                    <div>
+                        <h2 class="about-title" style="text-align: right;" >At Quiz UP!, </h2>
+                        <p>We believe that learning should be fun and engaging. We have curated a vast collection of trivia topics, ranging from history and science to pop culture and sports. With thousands of quizzes available, you'll never run out of exciting challenges to test your knowledge.</p>
+                    </div>
+                    <img src="ASSET_UKL/image/ques2.jpg" alt="">
+                </div>
+
+                <div class="about-con" style="margin-bottom: 64px;" >
+                    <img src="ASSET_UKL/image/ques3.webp" alt="">
+                    <div>
+                        
+                        <p>Whether you're looking to sharpen your trivia skills, discover new interests, or connect with like-minded individuals, QuizUp is your go-to destination. So, what are you waiting for? Join the quiz revolution and embark on an exciting journey of knowledge and discovery. Get ready to challenge, compete, and </p>
+                        <h2 class="about-title" style="text-align: left;" >conquer at QuizUp!</h2>
+                    </div>
+                    
+                </div>
+            </section>
         </div>
     
     </div>
@@ -480,6 +757,22 @@ Welcome to Quiz Up buddy and let the games begin!</pre>
     <script>
         let section = document.querySelectorAll('section');
         let lists = document.querySelectorAll('.list');
+
+        let range =document.getElementById('rate');
+        let pesan = document.getElementById('demo');
+
+        let feedback =document.getElementById('feed');
+        
+        let count = document.getElementById('count');
+
+        range.addEventListener('input', () => {
+            pesan.innerHTML = range.value;
+        });
+
+        feedback.addEventListener('input', () => {
+            count.innerHTML = feedback.value.length;
+        });
+
         function activeLink(li) {
             lists.forEach((item) => item.classList.remove('active'));
             li.classList.add('active');

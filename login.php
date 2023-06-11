@@ -501,14 +501,13 @@ if(isset($_POST['submit'])){
                     <form action="" method="post" id="login" class="fade-in" >
                         <label for="email-username" class="user-email" >USERNAME or EMAIL</label>
                         <p class="error" ><?php echo $email_error_massage; ?></p>
-                        <input type="text" name="email" id="email">
+                        <input type="text" name="email" id="email" autocomplete="off" >
                         <label for="password" class="user-password" >PASSWORD</label>
                         <p for="error" class="error"><?php echo $password_error_massage; ?></p>
                         <div class="password">
                             <input type="password" name="password" id="password">
                             <img src="ASSET_UKL/icon/blue-icon/eye-off.png" id="eye" onclick="showpass()" >
                         </div>
-                        <a href="forgot.php">FORGOT PASSWORD ?</a>
                         <button type="submit" name="submit">LOG IN</button>
 
                         <div class="link">

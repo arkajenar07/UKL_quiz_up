@@ -5,7 +5,10 @@ include('db.php');
 $category = "SELECT * FROM `kategori`" ;
 $query_category = mysqli_query($host, $category);
 
-$pembuat = $_SESSION['username_email'];
+$kelas = "SELECT * FROM `kelas`";
+$query_kelas = mysqli_query($host, $kelas);
+
+$id_user = $_SESSION["id_user"];
 
 $quizname_error_massage = "";
 $quiznumber_error_massage= "";
@@ -14,6 +17,7 @@ $quiznumber_error_massage= "";
 if(isset($_POST['create'])){
     $nama_quiz = $_POST['quiz-name'];
     $kategori = $_POST['quiz-category'];
+    $kelas = $_POST['class'];
     $level = $_POST['level'];
 
     if(empty(trim($nama_quiz))){
@@ -21,11 +25,6 @@ if(isset($_POST['create'])){
     }
 
     if(!empty(trim($nama_quiz))){
-
-        $get_id_pembuat = "SELECT * FROM `pengguna` WHERE username = '$pembuat'";
-        $query_id_pembuat = mysqli_query($host, $get_id_pembuat);
-        $row_id_pembuat = mysqli_fetch_array($query_id_pembuat);
-        $id_pembuat = $row_id_pembuat['id_user'];
 
         if($kategori === "other"){
             $new_kategori = $_POST['quiz-new-category'];
@@ -41,7 +40,12 @@ if(isset($_POST['create'])){
                 $row_id_kategori = mysqli_fetch_array($query_id_kategori);
                 $id_kategori = $row_id_kategori['id_kategori'];
 
-                $create_quiz = "INSERT INTO `kuis` (`id_kuis`, `nama_kuis`, `id_pembuat`, `id_kategori`, `level`) VALUES ('','$nama_quiz','$id_pembuat','$id_kategori','$level')";
+                $get_id_class = "SELECT * FROM `kelas` WHERE nama_kelas = '$kelas'";
+                $query_id_class = mysqli_query($host, $get_id_class);
+                $row_id_class = mysqli_fetch_array($query_id_class);
+                $id_class = $row_id_class['id_kelas'];
+
+                $create_quiz = "INSERT INTO `kuis` (`id_kuis`, `nama_kuis`, `id_pembuat`, `id_kategori`, `level`, `id_kelas`) VALUES ('','$nama_quiz','$id_user','$id_kategori','$level', '$id_class')";
                 $query_create_quiz = mysqli_query($host, $create_quiz);
                 if($query_create_quiz){
                     $id_kuis = mysqli_insert_id($host);
@@ -64,7 +68,12 @@ if(isset($_POST['create'])){
             $row_id_kateg = mysqli_fetch_array($query_id_kateg);
             $id_category = $row_id_kateg['id_kategori'];
 
-            $create_kuis = "INSERT INTO `kuis` (`id_kuis`, `nama_kuis`, `id_pembuat`, `id_kategori`, `level`) VALUES ('','$nama_quiz','$id_pembuat','$id_category','$level')";
+            $get_id_kelas = "SELECT * FROM `kelas` WHERE nama_kelas = '$kelas'";
+            $query_id_kelas = mysqli_query($host, $get_id_kelas);
+            $row_id_kelas = mysqli_fetch_array($query_id_kelas);
+            $id_kelas = $row_id_kelas['id_kelas'];
+
+            $create_kuis = "INSERT INTO `kuis` (`id_kuis`, `nama_kuis`, `id_pembuat`, `id_kategori`, `level` , `id_kelas`) VALUES ('','$nama_quiz','$id_user','$id_category','$level', '$id_kelas')";
             $query_create_kuis = mysqli_query($host, $create_kuis);
             if($query_create_kuis){
                 $id_quiz = mysqli_insert_id($host);
@@ -210,6 +219,7 @@ if(isset($_POST['create'])){
     }
 </style>
 <body>
+    <img src="ASSET_UKL/icon/purple-icon/BACK-ARROW.png" onclick="backHome()">
     <h1>MAKE A QUIZ</h1>
     <form action="" method="post" id="make_quiz">
         
@@ -233,6 +243,15 @@ if(isset($_POST['create'])){
             <input type="text" name="quiz-new-category" id="input-new">
         </div>
         <div class="container-label">
+            <label for="" class="label-make-a-quiz" >CLASS</label>
+            <select name="class" id="option" onchange="showDiv('new-input', this)">
+            <?php while ($row_kelas = mysqli_fetch_array($query_kelas)) {?>
+                <option value="<?php echo $row_kelas['nama_kelas']; ?>"><?php echo $row_kelas['nama_kelas']; ?></option>
+                <?php } ?>
+                <option value="other">other</option>
+            </select>
+        </div>
+        <div class="container-label">
         <label for="" class="label-make-a-quiz" >LEVEL</label>
             <select name="level" id="option" style="margin-bottom: 32px" >
                 <option value="easy">EASY</option>
@@ -247,7 +266,10 @@ if(isset($_POST['create'])){
         function showDiv(divId, element) {
          document.getElementById(divId).style.display = element.value == "other" ? 'block' : 'none';
         }
-        
+
+        function backHome() {
+            window.location.href = 'page-mentor.php';
+        }
     </script>
 </body>
 

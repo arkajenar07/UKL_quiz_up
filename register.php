@@ -10,7 +10,7 @@ $confirm_password_error_massage = "";
 if(isset($_POST['insert'])){
 
     $username = $_POST['username'];
-    $password_register = md5($_POST['password-register']);
+    $password_register = ($_POST['password-register']);
     $email_register = $_POST['email-register'];
     $con_pass = $_POST['confirm-password'];
 
@@ -60,10 +60,11 @@ if(isset($_POST['insert'])){
 
             if($have_numbers){
     
-                if ($password_register === md5($con_pass)) {
+                if ($password_register === $con_pass) {
                   
                     if($username_find != 1 && $email_find != 1){
-                        $sql_insert = "INSERT INTO `pengguna` (`id_user`, `email`, `password`, `username`) VALUES ('', '$email_register', '$password_register', '$username')";
+                        $password_register = md5($password_register);
+                        $sql_insert = "INSERT INTO `pengguna` (`id_user`, `email`, `password`, `username` , `foto_profil`) VALUES ('', '$email_register', '$password_register', '$username', 'default.jpg')";
 
                         // insert in database 
                         $rs = mysqli_query($host, $sql_insert);
@@ -78,10 +79,10 @@ if(isset($_POST['insert'])){
     
                             if($email_find_after_results == 1){
                                 $_SESSION["username_email"] = $row_check_email_after_regis['username'];
-                                $_SESSION["id_user"] = $row['id_user'];
+                                $_SESSION["id_user"] = $row_check_email_after_regis['id_user'];
                             }
 
-                            if(isset($_SESSION['username_email'])){
+                            if(isset($_SESSION['id_user'])){
                                 header('Location: jenis-user.php');
                             }
                     }   
@@ -547,7 +548,7 @@ if(isset($_POST['insert'])){
                             <div class="uname">
                                 <label for="username" class="username" >USERNAME</label>
                                 <p class="error-small" ><?php echo $username_error_massage; ?></p>
-                                <input type="text" name="username" id="username">
+                                <input type="text" name="username" id="username" maxlength="15" >
                             </div>
                             <div class="email-con" >
                                 <label for="email" class="email" >EMAIL</label>

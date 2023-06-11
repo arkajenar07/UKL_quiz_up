@@ -13,6 +13,7 @@ $sql_search_user = "SELECT * FROM `pengguna` WHERE username LIKE '%$search_resul
 
 $result_search_user = mysqli_query($host, $sql_search_user);
 $count_search_user = mysqli_num_rows($result_search_user);
+
  ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,6 +59,7 @@ $count_search_user = mysqli_num_rows($result_search_user);
             display: grid;
             grid-template-columns: auto auto auto;
             gap: 64px;
+            margin-bottom: 32px;
         }
 
         .card-course{
@@ -81,6 +83,12 @@ $count_search_user = mysqli_num_rows($result_search_user);
         }
 
         .cover{
+            height: 254px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .cover img{
             height: 254px;
         }
 
@@ -212,43 +220,46 @@ $count_search_user = mysqli_num_rows($result_search_user);
         <div class="card-course">
         <h1 class="card-title"><?php echo $row_search_result['nama_kuis'];?></h1>
         <div class="cover">
-            <img src="ASSET_UKL/image/question.jpg" alt="">
+            <img src="ASSET_UKL/image/questions.jpg" alt="">
         </div>
         <div class="play-menu">
             <div class="score-avg">
                 <h1 class="question-num"><?php echo $count_ques. " QUESTIONS"; ?></h1>
                 <a href="" class="avg"><?php echo "CATEGORY: ".$row_category['nama_kategori']; ?></a>
             </div>
-            <a href="playmenu.php?play=<?php echo $id_kuis; ?>"><button class="play-button" >GO PLAY!</button></a>
+            <a href="quiz-details.php?play=<?php echo $id_kuis; ?>"><button class="play-button" >QUIZ DETAILS</button></a>
         </div>
     </div>
     <?php } ?>
     
     
-</div>
+    </div>
 <?php } else{ ?>
     <h1>NO RESULT FOUND FOR '<?php echo $search_result; ?>'</h1>
 <?php } ?>
+
 <h1 class="ttl" >User</h1>
 <div class="username-grid">
 <?php if($count_search_user >= 1){
     while($row_search_user = mysqli_fetch_array($result_search_user)){ ?>
     <div class="username-search">
         <img src="./ASSET_UKL/image/<?php echo $row_search_user['foto_profil'];?>" alt="">
-        <h2 ><?php echo $row_search_user['username'];?></h2>
+        <h2><?php echo $row_search_user['username'];?></h2>
+        
     </div>
     <?php }}else{ ?>
         <h1>NO USER FOUND FOR '<?php echo $search_result; ?>'</h1>
     <?php } ?>
-</div>
+    </div>
 
     
 
     </div>
-</body>
-<script>
+    <script>
         function backHome() {
-            window.location.href = 'page.php';
+            window.location.href = 'page-mentor.php';
         }
-</script>
+    </script>
+
+</body>
 </html>

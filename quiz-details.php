@@ -18,10 +18,6 @@ $sql_play = "SELECT * FROM `quiz_pengguna` WHERE id_kuis = $id";
 $query_play = mysqli_query($host, $sql_play);
 $count_play = mysqli_num_rows($query_play);
 
-
-date_default_timezone_set("Asia/Jakarta");
-$start = date("H:i:s");
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -297,21 +293,9 @@ $start = date("H:i:s");
     
     </div>
     <span class="count-ques"> <?php echo  $count_play." PLAYED"; ?></span>
-    <button type="submit" name="play" class="play-button" >PLAY NOW</button>
-    
-    <?php
-
-        if(isset($_POST['play'])){
-            $_SESSION['start'] = $start;
-            echo "<script>
-                    window.location.href = 'play.php?playing=$id&ques=1&true=0';
-                </script>";
-        }
-
-    ?>
 </form>
 
-<a href="page.php"><button class="back-button">FIND NEW QUIZ</button></a>
+<a href="page-mentor.php"><button class="back-button">FIND NEW QUIZ</button></a>
 
 </body>
 </html>

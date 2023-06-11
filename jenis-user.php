@@ -2,10 +2,13 @@
 session_start();
 include('db.php');
 
+$id_user = $_SESSION["id_user"];
+echo $id_user;
 $username_email = $_SESSION["username_email"];
 
+
 if(isset($_POST['submit-student'])){
-    $sql_update = "UPDATE `pengguna` SET `jenis_user`='murid' WHERE username = '$username_email'";
+    $sql_update = "UPDATE `pengguna` SET `jenis_user`='murid' WHERE id_user = $id_user";
     $result = mysqli_query($host, $sql_update);
     if($result){
         header('location: page.php');
@@ -15,7 +18,7 @@ if(isset($_POST['submit-student'])){
 }
 
 if(isset($_POST['submit-mentor'])){
-    $sql_update_mentor = "UPDATE `pengguna` SET `jenis_user`='mentor' WHERE username = '$username_email'";
+    $sql_update_mentor = "UPDATE `pengguna` SET `jenis_user`='mentor' WHERE id_user = $id_user";
     $result_mentor = mysqli_query($host, $sql_update_mentor);
     if($result_mentor){
         header('location: page-mentor.php');

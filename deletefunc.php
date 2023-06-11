@@ -10,39 +10,25 @@
     }else{
         echo "FALSE";
     }*/
-    $select_soal = "SELECT * FROM `soal` WHERE id_kuis = $id";
-    $res_select = mysqli_query($host, $select_soal);
-    $count_select = mysqli_num_rows($res_select);
-
-    if($count_select > 0){
-        $delete_soal = "DELETE FROM soal  WHERE id_kuis = $id";
+        $delete_soal = "DELETE FROM `soal`  WHERE id_kuis = $id";
         $res = mysqli_query($host, $delete_soal);
         if($res){
-            $sql_delete = "DELETE FROM `kuis` WHERE id_kuis = $id";
-            $res_del = mysqli_query($host, $sql_delete);
-            if($res_del){
-                echo "<script> 
-                alert('QUIZ BERHASIL DIHAPUS');
-                window.location.href = 'page-mentor.php';
-                </script>";
+            $delete_history = "DELETE FROM `quiz_pengguna` WHERE id_kuis = $id";
+            $result = mysqli_query($host, $delete_history);
+            if($result){
+                $sql_delete = "DELETE FROM `kuis` WHERE id_kuis = $id";
+                $res_del = mysqli_query($host, $sql_delete);
+                if($res_del){
+                    echo "<script> 
+                    alert('QUIZ BERHASIL DIHAPUS');
+                    window.location.href = 'page-mentor.php';
+                    </script>";
 
-            }else{
-                echo "FALSE";
+                }else{
+                    echo "FALSE NO";
+                }
             }
-        }else{
-            echo "FALSE";
+            
         }
-    } else{
-        $sql_del = "DELETE FROM `kuis` WHERE id_kuis = $id";
-        $result = mysqli_query($host, $sql_del);
-        if($result){
-            echo "<script> 
-                alert('QUIZ BERHASIL DIHAPUS');
-                window.location.href = 'page-mentor.php';
-                </script>";
-        }else{
-            echo "FALSE";
-        }
-    }   
     
 ?>

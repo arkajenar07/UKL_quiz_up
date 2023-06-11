@@ -1,3 +1,9 @@
+<?php
+include('db.php');
+
+$show_feed = "SELECT * FROM `feedback`";
+$query_show_feed = mysqli_query($host, $show_feed);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +37,7 @@
         font-family: 'Share Tech Mono', monospace;
     }
         .sec {
-            height: 832px;
+            height: auto;
             padding-top: 243px;
         }
 
@@ -180,6 +186,7 @@
         }
 
         #home{
+            height: 832px;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -232,10 +239,98 @@
             outline-offset: 6px;
         }
 
-        #feedback h1{
+        #feedback h1, #about-us h1{
             font-size: 84px;
             color: #3E54AC;
             text-align: center;
+        }
+
+        .profile-pic-feed{
+            width: 120px;
+            height: 120px;
+            border: 2px solid #AD7BE9;
+            border-radius: 96px;
+            margin-top: 32px;
+            margin-left: 64px;
+        }
+
+        .feedcon{
+            margin-top: 64px;
+            margin-left: 132px;
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 64px;
+        }
+
+        .feedback-con{
+            width: 600px;
+            height: 400px;
+            border: 3px solid #AD7BE9;
+            border-radius: 36px;
+        }
+
+        .feedback-title{
+            background-color: #AD7BE9;
+            border-radius: 32px 32px 0 0;
+            height: 90px;
+            display: flex;
+        }
+        .ttl-container{
+            margin-top: 48px;
+            margin-left: 32px;
+        }
+
+        .username-feedback{
+            font-size: 36px;
+            color: #FFFFFF;
+        }
+
+        .tanggal-feedback{
+            font-size: 24px;
+            color: #AD7BE9;
+            font-weight: 400;
+        }
+
+        .pesan-feedback{
+            word-wrap: break-word;
+            height: 160px;
+            margin-left: 16px;
+            margin-top: 72px;
+            font-size: 16px;
+
+        }
+
+        .rate-feedback{
+            height: 78px;
+            border-top: 3px solid #AD7BE9;
+            color: #F1E806;
+            text-align: center;
+            font-size: 48px;
+            padding-top: 8px;
+        }
+
+        .about-con{
+            display: flex;
+            align-items: center;
+            margin-left: 64px;
+        }
+
+        .about-con .about-title{
+            font-size: 48px;
+            color: #694E8A;
+            
+        }
+
+        .about-con  p{
+            margin-top: 48px;
+            font-size: 24px;
+            color: #694E8A;
+            width: 960px;
+            text-align: justify;
+        }
+
+        .about-con img{
+            width: 640px;
         }
 
         @keyframes intro{
@@ -307,13 +402,65 @@
                 <pre>Welcome to Quiz Up! The ultimate course quiz game 
 for students of all ages! Challenge yourself and 
 test your knowledge!</pre>
-                <button>GET STARTED</button>
+                <a href="login.php"> <button>GET STARTED</button></a>
             </section>
             <section class="sec" id="feedback">
                 <h1>FEEDBACK AND RATINGS</h1>
+                <div class="feedcon">
+                    <?php while($row_feedback = mysqli_fetch_array($query_show_feed )){ ?>
+                        <?php 
+                            $get_id_pengirim = $row_feedback['id_pengirim'];
+                            $select_pengirim = "SELECT pengguna.username, pengguna.foto_profil, feedback.id_pengirim FROM pengguna INNER JOIN feedback ON pengguna.id_user = $get_id_pengirim;";
+                            $nama_get = mysqli_query($host, $select_pengirim);
+                            $row_nama = mysqli_fetch_array($nama_get);
+                            ?>
+                        <div class="feedback-con">
+                            <div class="feedback-title">
+                                <img src="./ASSET_UKL/image/<?php echo $row_nama['foto_profil']; ?>" alt="" class="profile-pic-feed">
+                                <div class="ttl-container">
+                                    <h3 class="username-feedback" ><?php echo $row_nama['username']; ?></h3>
+                                    <h3 class="tanggal-feedback"  > <?php echo $row_feedback['tanggal_kirim']; ?></h3>
+                                </div>
+                                
+                            </div>
+                            
+                            <p class="pesan-feedback"><?php echo $row_feedback['pesan_feedback']; ?></p>
+                            <h3 class="rate-feedback" ><?php echo $row_feedback['rating']." / 10"; ?></h3>
+                        </div>
+                    
+                    <?php }?>
+                </div>
         
             </section>
-            <section class="sec" style="background-color: orange;" id="about-us"></section>
+            <section class="sec" id="about-us">
+                <h1>ABOUT US</h1>
+                <div class="about-con">
+                    <img src="ASSET_UKL/image/sit.avif" alt="">
+                    <div>
+                        <h2 class="about-title" style="text-align: left;">Welcome to QUIZ UP !</h2>
+                        <p>Welcome to QuizUp, the ultimate destination for trivia lovers! We are passionate about knowledge, learning, and the thrill of competition. Whether you're a trivia novice or a seasoned expert, QuizUp is the place to challenge yourself, expand your horizons, and connect with like-minded individuals from all around the world.</p>
+                    </div>
+                </div>
+
+                <div class="about-con">
+                    
+                    <div>
+                        <h2 class="about-title" style="text-align: right;" >At Quiz UP!, </h2>
+                        <p>We believe that learning should be fun and engaging. We have curated a vast collection of trivia topics, ranging from history and science to pop culture and sports. With thousands of quizzes available, you'll never run out of exciting challenges to test your knowledge.</p>
+                    </div>
+                    <img src="ASSET_UKL/image/ques2.jpg" alt="">
+                </div>
+
+                <div class="about-con" style="margin-bottom: 64px;" >
+                    <img src="ASSET_UKL/image/ques3.webp" alt="">
+                    <div>
+                        
+                        <p>Whether you're looking to sharpen your trivia skills, discover new interests, or connect with like-minded individuals, QuizUp is your go-to destination. So, what are you waiting for? Join the quiz revolution and embark on an exciting journey of knowledge and discovery. Get ready to challenge, compete, and </p>
+                        <h2 class="about-title" style="text-align: left;" >conquer at QuizUp!</h2>
+                    </div>
+                    
+                </div>
+            </section>
         </div>
     
     </div>
